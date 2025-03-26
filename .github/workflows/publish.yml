@@ -1,0 +1,29 @@
+name: Publish Pelican Site
+
+on:
+  push:
+    branches:
+      - main  # Change this if using a different branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install Dependencies
+        run: |
+          pip install pelican markdown ghp-import
+
+      - name: Build Site
+        run: pelican content -o output -s pelicanconf.py
+
+      - name: Deploy to GitHub Pages
+        run: |
+          ghp-import -n -p -f output
